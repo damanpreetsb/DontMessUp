@@ -1,15 +1,20 @@
-package com.singh.daman.dontmessup;
+package com.singh.daman.dontmessup.ui;
 
+import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.util.ArrayMap;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.singh.daman.dontmessup.R;
+import com.singh.daman.dontmessup.data.Data;
+import com.singh.daman.dontmessup.enums.GestureEnum;
+import com.singh.daman.dontmessup.utils.Utility;
 
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener,
         GestureDetector.OnDoubleTapListener {
@@ -17,32 +22,30 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private static final String DEBUG_TAG = "Gestures";
     private GestureDetectorCompat mDetector;
     private TextView textView;
-    private int i = 0;
-    private String[] strArr = new String[]{"Tap", "Double", "Swipe"};
+    private ArrayMap<String,String> arrayMap;
+    private String[] s = new String[2];
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        Utility.setFullScreen(this);
         setContentView(R.layout.activity_main);
         mDetector = new GestureDetectorCompat(this,this);
         mDetector.setOnDoubleTapListener(this);
         textView = (TextView) findViewById(R.id.text_view);
+        arrayMap = Data.createArrayMap();
         loop();
 
     }
 
     private void loop(){
-        final Handler handler = new Handler();
+        handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(i == 2){
-                    i = 0;
-                } else
-                    i++;
-                textView.setText(strArr[i]);
+                s = Data.getData(arrayMap);
+                textView.setText(s[0]);
                 loop();
             }
         }, 1000);
@@ -51,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     @Override
     public boolean onTouchEvent(MotionEvent event){
         this.mDetector.onTouchEvent(event);
-        // Be sure to call the superclass implementation
         return super.onTouchEvent(event);
     }
 
@@ -102,6 +104,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     @Override
     public boolean onSingleTapConfirmed(MotionEvent event) {
         Log.d(DEBUG_TAG, "onSingleTapConfirmed: " + event.getAction());
+        check(GestureEnum.TAP.toString());
         return true;
+    }
+
+    private void check(String value){
+        if(!s[1].equals(value)){
+            handler.removeMessages(0);
+            Toast.makeText(this, "OUT", Toast.LENGTH_SHORT).show();
+        }
     }
 }
