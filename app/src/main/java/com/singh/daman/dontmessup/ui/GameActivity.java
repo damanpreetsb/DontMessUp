@@ -56,7 +56,7 @@ public class GameActivity extends AppCompatActivity implements GestureDetector.O
             handler.postDelayed(this, 20);
             progress = progress + 2;
             progressBar.setProgress(progress);
-            if(progress == 100){
+            if(progress >= 100){
                 s = Data.getData(arrayMap);
                 textView.setText(s[0]);
                 progress = 0;

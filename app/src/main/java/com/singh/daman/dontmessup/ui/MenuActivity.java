@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.singh.daman.dontmessup.R;
+import com.singh.daman.dontmessup.utils.Utility;
 
 public class MenuActivity extends AppCompatActivity {
     private Button button;
@@ -14,6 +15,7 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utility.setFullScreen(this);
         setContentView(R.layout.activity_menu);
         button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
