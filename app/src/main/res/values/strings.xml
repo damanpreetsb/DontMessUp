@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Dont Mess Up</string>
+    <string name="game_over">Game Over</string>
 </resources>

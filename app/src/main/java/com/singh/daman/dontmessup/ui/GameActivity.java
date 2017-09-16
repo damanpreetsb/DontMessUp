@@ -1,5 +1,7 @@
 package com.singh.daman.dontmessup.ui;
 
+import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.util.ArrayMap;
@@ -15,13 +17,15 @@ import android.widget.Toast;
 import com.singh.daman.dontmessup.R;
 import com.singh.daman.dontmessup.data.Data;
 import com.singh.daman.dontmessup.enums.GestureEnum;
+import com.singh.daman.dontmessup.listeners.AnimListener;
 import com.singh.daman.dontmessup.utils.Utility;
 
 public class GameActivity extends AppCompatActivity implements GestureDetector.OnGestureListener,
-        GestureDetector.OnDoubleTapListener {
+        GestureDetector.OnDoubleTapListener, AnimListener {
 
     private static final String DEBUG_TAG = "Gestures";
     private GestureDetectorCompat mDetector;
+    private AnimListener animListener;
     private TextView textView;
     private ArrayMap<String, String> arrayMap;
     private String[] s = new String[2];
@@ -56,18 +60,25 @@ public class GameActivity extends AppCompatActivity implements GestureDetector.O
             handler.postDelayed(this, 20);
             progress = progress + 2;
             progressBar.setProgress(progress);
-            if(progress >= 100){
-                s = Data.getData(arrayMap);
-                textView.setText(s[0]);
-                progress = 0;
+            System.out.println(progress);
+            if(progress > 100){
                 if(click) {
                     loop();
+                    s = Data.getData(arrayMap);
+                    textView.setText(s[0]);
+                    progress = 0;
                     click = false;
                 }
                 else {
                     handler.removeCallbacks(this);
                     Toast.makeText(GameActivity.this, "Out", Toast.LENGTH_SHORT).show();
-                    finish();
+                    Utility.shakeAnimation(textView, new AnimListener() {
+                        @Override
+                        public void animEndListener() {
+                            startActivity(new Intent(GameActivity.this, OverActivity.class));
+                            finish();
+                        }
+                    });
                 }
             }
 
@@ -143,7 +154,13 @@ public class GameActivity extends AppCompatActivity implements GestureDetector.O
         if (!s[1].equals(value)) {
             handler.removeCallbacks(updateTime);
             Toast.makeText(this, "OUT", Toast.LENGTH_SHORT).show();
-            finish();
+            Utility.shakeAnimation(textView, this);
         }
+    }
+
+    @Override
+    public void animEndListener() {
+        startActivity(new Intent(GameActivity.this, OverActivity.class));
+        finish();
     }
 }
