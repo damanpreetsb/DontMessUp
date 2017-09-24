@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
+    android:background="@color/colorPrimary"
     tools:context="com.singh.daman.dontmessup.ui.MenuActivity">
 
     <TextView
+        android:id="@+id/text_app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>
+        android:textColor="@color/white"
+        android:layout_margin="20dp"
+        android:transitionName="@string/shared_textview"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        tools:targetApi="lollipop" />
 
     <Button
         android:id="@+id/button"
